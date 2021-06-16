@@ -2,7 +2,7 @@
 /**
  * StockQuote plugin for Craft CMS 3.x
  *
- * 
+ *
 Simple real-time stock quotes from the Alpha Vantage API.
  *
  * @link      http://www.jesseknowles.com
@@ -35,85 +35,74 @@ use yii\base\Event;
  */
 class StockQuote extends Plugin
 {
-    // Static Properties
-    // =========================================================================
+  // Static Properties
+  // =========================================================================
 
-    /**
-     * @var StockQuote
-     */
-    public static $plugin;
+  /**
+   * @var StockQuote
+   */
+  public static $plugin;
 
-    // Public Properties
-    // =========================================================================
+  // Public Properties
+  // =========================================================================
 
-    /**
-     * @var string
-     */
-    public $schemaVersion = '1.0.0';
+  /**
+   * @var string
+   */
+  public $schemaVersion = "1.0.0";
 
-    // Public Methods
-    // =========================================================================
+  // Public Methods
+  // =========================================================================
 
-    /**
-     * @inheritdoc
-     */
-    public function init()
-    {
-        parent::init();
-        self::$plugin = $this;
+  /**
+   * @inheritdoc
+   */
+  public function init()
+  {
+    parent::init();
+    self::$plugin = $this;
 
-        Craft::$app->view->registerTwigExtension(new StockQuoteTwigExtension());
+    Craft::$app->view->registerTwigExtension(new StockQuoteTwigExtension());
 
-        Event::on(
-            CraftVariable::class,
-            CraftVariable::EVENT_INIT,
-            function (Event $event) {
-                /** @var CraftVariable $variable */
-                $variable = $event->sender;
-                $variable->set('stockQuote', StockQuoteVariable::class);
-            }
-        );
+    Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, function (
+      Event $event
+    ) {
+      /** @var CraftVariable $variable */
+      $variable = $event->sender;
+      $variable->set("stockQuote", StockQuoteVariable::class);
+    });
 
-        Event::on(
-            Plugins::class,
-            Plugins::EVENT_AFTER_INSTALL_PLUGIN,
-            function (PluginEvent $event) {
-                if ($event->plugin === $this) {
-                }
-            }
-        );
+    Event::on(Plugins::class, Plugins::EVENT_AFTER_INSTALL_PLUGIN, function (
+      PluginEvent $event
+    ) {
+      if ($event->plugin === $this) {
+      }
+    });
 
-        Craft::info(
-            Craft::t(
-                'stock-quote',
-                '{name} plugin loaded',
-                ['name' => $this->name]
-            ),
-            __METHOD__
-        );
-    }
+    Craft::info(
+      Craft::t("stock-quote", "{name} plugin loaded", ["name" => $this->name]),
+      __METHOD__
+    );
+  }
 
-    // Protected Methods
-    // =========================================================================
+  // Protected Methods
+  // =========================================================================
 
-    /**
-     * @inheritdoc
-     */
-    protected function createSettingsModel()
-    {
-        return new Settings();
-    }
+  /**
+   * @inheritdoc
+   */
+  protected function createSettingsModel()
+  {
+    return new Settings();
+  }
 
-    /**
-     * @inheritdoc
-     */
-    protected function settingsHtml(): string
-    {
-        return Craft::$app->view->renderTemplate(
-            'stock-quote/settings',
-            [
-                'settings' => $this->getSettings()
-            ]
-        );
-    }
+  /**
+   * @inheritdoc
+   */
+  protected function settingsHtml(): string
+  {
+    return Craft::$app->view->renderTemplate("stock-quote/settings", [
+      "settings" => $this->getSettings(),
+    ]);
+  }
 }
